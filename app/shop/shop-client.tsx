@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 import styles from "./shop.module.css";
+import AdminNavLink from "@/app/components/admin-nav-link";
 import CartNavLink from "@/app/components/cart-nav-link";
 import SearchBar from "@/app/components/search-bar";
 import FilterSidebar from "@/app/shop/filter-sidebar";
@@ -43,15 +44,14 @@ type FilterState = {
   priceRange: [number, number];
 };
 
-export default function ShopClient() {
-  const router = useRouter();
-  const pathname = usePathname();
+type ShopClientProps = {
+  initialProducts: ApiProduct[];
+};
+
+export default function ShopClient({ initialProducts }: ShopClientProps) {
   const searchParams = useSearchParams();
   const searchQuery = (searchParams.get("search") ?? "").trim().toLowerCase();
 
-  const [products, setProducts] = useState<ShopProduct[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<"grid" | "list">("list");
   const [filters, setFilters] = useState<FilterState>({
     categories: [] as string[],
@@ -61,74 +61,28 @@ export default function ShopClient() {
   });
   const [showMobileFilters, setShowMobileFilters] = useState(false);
 
+  const mappedProducts = useMemo<ShopProduct[]>(
+    () =>
+      initialProducts.map((product) => ({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        originalPrice: Number((product.price * 1.13).toFixed(2)),
+        image: product.image,
+        rating: 7.5,
+        orders: Math.max(24, product.stock * 3),
+        description: product.description,
+        inStock: product.stock > 0,
+        category: product.category,
+        brand: product.name.split(" ")[0] ?? "Generic",
+      })),
+    [initialProducts],
+  );
+
   // Get category from URL params
   const category = searchParams.get("category") ?? "";
 
-  useEffect(() => {
-    let isMounted = true;
-
-    async function fetchProducts() {
-      try {
-        setLoading(true);
-        setError(null);
-
-        // Build query string with search and category params
-        const params = new URLSearchParams();
-        if (searchQuery) {
-          params.append("search", searchQuery);
-        }
-        if (category) {
-          params.append("category", category);
-        }
-
-        const apiUrl = params.toString()
-          ? `/api/products?${params.toString()}`
-          : "/api/products";
-
-        const response = await fetch(apiUrl, { cache: "no-store" });
-
-        if (!response.ok) {
-          throw new Error("Unable to fetch products");
-        }
-
-        const data = (await response.json()) as ApiProduct[];
-        const mappedProducts: ShopProduct[] = data.map((product) => ({
-          id: product.id,
-          name: product.name,
-          price: product.price,
-          originalPrice: Number((product.price * 1.13).toFixed(2)),
-          image: product.image,
-          rating: 7.5,
-          orders: Math.max(24, product.stock * 3),
-          description: product.description,
-          inStock: product.stock > 0,
-          category: product.category,
-          brand: product.name.split(" ")[0] ?? "Generic",
-        }));
-
-        if (isMounted) {
-          setProducts(mappedProducts);
-        }
-      } catch (fetchError) {
-        console.error(fetchError);
-        if (isMounted) {
-          setError("Failed to load products.");
-        }
-      } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
-      }
-    }
-
-    fetchProducts();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [searchQuery, category]);
-
-  const filteredProducts = products.filter((product) => {
+  const filteredProducts = mappedProducts.filter((product) => {
     const matchesSearch =
       searchQuery.length === 0 ||
       product.name.toLowerCase().includes(searchQuery) ||
@@ -178,6 +132,7 @@ export default function ShopClient() {
             <span className="top-link-icon orders" aria-hidden="true" />
             <span>Orders</span>
           </a>
+          <AdminNavLink />
           <CartNavLink />
         </div>
       </section>
@@ -244,9 +199,6 @@ export default function ShopClient() {
 
         {/* Main content */}
         <section className={styles.mainContent}>
-          {loading && <p className={styles.itemCount}>Loading products...</p>}
-          {error && <p className={styles.itemCount}>{error}</p>}
-
           <Toolbar
             viewMode={viewMode}
             setViewMode={setViewMode}

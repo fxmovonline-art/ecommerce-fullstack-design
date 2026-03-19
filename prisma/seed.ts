@@ -83,6 +83,22 @@ const sampleProducts = [
     category: "Home",
     stock: 14,
   },
+  {
+    name: "Stainless Steel Water Bottle",
+    price: 24.99,
+    image: "https://images.unsplash.com/photo-1523362628745-0c100150b504?auto=format&fit=crop&w=900&q=80",
+    description: "Double-wall insulated bottle that keeps drinks cold for hours.",
+    category: "Accessories",
+    stock: 82,
+  },
+  {
+    name: "Portable Bluetooth Speaker",
+    price: 64.5,
+    image: "https://images.unsplash.com/photo-1589003077984-894e133dabab?auto=format&fit=crop&w=900&q=80",
+    description: "Compact speaker with rich bass, clear vocals, and all-day battery.",
+    category: "Electronics",
+    stock: 41,
+  },
 ];
 
 async function main() {

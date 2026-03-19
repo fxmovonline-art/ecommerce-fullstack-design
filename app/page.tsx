@@ -2,13 +2,23 @@ import Link from "next/link";
 
 import { logoutAction } from "@/app/auth/actions";
 import AddToCartButton from "@/app/components/add-to-cart-button";
+import AdminNavLink from "@/app/components/admin-nav-link";
 import CartNavLink from "@/app/components/cart-nav-link";
 import SearchBar from "@/app/components/search-bar";
 import DealCountdown from "@/app/shop/deal-countdown";
 import { getCurrentUser } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 
 export default async function Home() {
   const currentUser = await getCurrentUser();
+  const recommendedProducts = await prisma.product.findMany({
+    take: 10,
+    orderBy: { createdAt: "desc" },
+  });
+  const continueShoppingHref =
+    recommendedProducts.length > 0
+      ? `/product/${recommendedProducts[0].id}`
+      : "/shop";
 
   const deals = [
     { name: "Smart watches", discount: "-25%", bg: "#f4f7fb url('/images/smart%20watch.png') center/74% no-repeat" },
@@ -38,19 +48,6 @@ export default async function Home() {
     { name: "Laptops and PC", price: "USD 340", bg: "#eee9df url('/images/laptop.png') center/cover no-repeat" },
     { name: "Smartphones", price: "USD 19", bg: "#eef7f9 url('/images/smartphone.png') center/cover no-repeat" },
     { name: "Electric kettle", price: "USD 240", bg: "#f8efef url('/images/utensils.png') center/cover no-repeat" },
-  ];
-
-  const recommended = [
-    { id: "1", name: "T-shirts with multiple colors, for men", price: "$10.30", bg: "#ddeff5 url('/images/t%20shirts.png') center/cover no-repeat" },
-    { id: "2", name: "Jeans shorts for men blue color", price: "$10.30", bg: "#f0e6d6 url('/images/jean%20short.png') center/cover no-repeat" },
-    { id: "3", name: "Brown winter coat medium size", price: "$12.50", bg: "#f0eff5 url('/images/brown%20coat.jpg') center/cover no-repeat" },
-    { id: "4", name: "Jeans bag for travel for men", price: "$34.00", bg: "#dae4f3 url('/images/jeans%20bags.png') center/cover no-repeat" },
-    { id: "5", name: "Leather wallet", price: "$99.00", bg: "#dde7f6 url('/images/smartphone.png') center/cover no-repeat" },
-    { id: "6", name: "Canon camera black, 100x zoom", price: "$9.99", bg: "#e2eaf4 url('/images/canon%20camera.png') center/cover no-repeat" },
-    { id: "7", name: "Headset for gaming with mic", price: "$8.99", bg: "#f0f2f6 url('/images/headphones.png') center/cover no-repeat" },
-    { id: "8", name: "Smartwatch silver color modern", price: "$10.30", bg: "#edf0f5 url('/images/smart%20watch.png') center/cover no-repeat" },
-    { id: "9", name: "Blue wallet for men leather material", price: "$10.30", bg: "#f1e4da url('/images/blue%20coat.png') center/cover no-repeat" },
-    { id: "10", name: "Jeans bag for travel for men", price: "$80.95", bg: "#eceae6 url('/images/jeans%20bags.png') center/cover no-repeat" },
   ];
 
   const services = [
@@ -124,6 +121,7 @@ export default async function Home() {
             <span className="top-link-icon orders" aria-hidden="true" />
             <span>Orders</span>
           </a>
+          <AdminNavLink />
           <CartNavLink />
         </div>
       </section>
@@ -180,7 +178,7 @@ export default async function Home() {
             <span>{currentUser ? "you are signed in" : "let's get started"}</span>
             {currentUser ? (
               <>
-                <Link href="/product/1" className="hero-auth-primary">Continue shopping</Link>
+                <Link href={continueShoppingHref} className="hero-auth-primary">Continue shopping</Link>
                 <form action={logoutAction}>
                   <button type="submit" className="hero-auth-secondary">Log out</button>
                 </form>
@@ -270,20 +268,23 @@ export default async function Home() {
       <section className="container content-stack">
         <h2 className="section-title">Recommended items</h2>
         <div className="recommended-grid">
-          {recommended.map((item) => (
-            <article key={item.name + item.price} className="panel recommended-card">
-              <Link href={`/product/${item.id}`}>
-                <div className="thumb" style={{ background: item.bg }} />
-                <h3>{item.price}</h3>
-                <p>{item.name}</p>
+          {recommendedProducts.map((product) => (
+            <article key={product.id} className="panel recommended-card">
+              <Link href={`/product/${product.id}`}>
+                <div
+                  className="thumb"
+                  style={{ backgroundImage: `url('${product.image}')` }}
+                />
+                <h3>${product.price.toFixed(2)}</h3>
+                <p>{product.name}</p>
               </Link>
               <AddToCartButton
-                id={item.id}
-                name={item.name}
-                price={Number(item.price.replace("$", ""))}
-                image={item.bg.match(/url\('([^']+)'\)/)?.[1] ?? "/images/smartphone.png"}
-                description={item.name}
-                category="Recommended"
+                id={product.id}
+                name={product.name}
+                price={product.price}
+                image={product.image}
+                description={product.description}
+                category={product.category}
                 className="recommended-add-btn"
               />
             </article>

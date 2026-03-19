@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import AddToCartButton from "@/app/components/add-to-cart-button";
+import AdminNavLink from "@/app/components/admin-nav-link";
 import CartNavLink from "@/app/components/cart-nav-link";
+import { prisma } from "@/lib/prisma";
 import styles from "./page.module.css";
 
 type ApiProduct = {
@@ -41,51 +42,20 @@ const PRODUCT_DETAILS = {
   ],
 };
 
-async function getBaseUrl() {
-  const headersList = await headers();
-  const host = headersList.get("x-forwarded-host") ?? headersList.get("host");
-  const protocol = headersList.get("x-forwarded-proto") ?? "http";
-
-  if (host) {
-    return `${protocol}://${host}`;
-  }
-
-  return process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
-}
-
 async function fetchProductById(id: string): Promise<ApiProduct | null> {
-  const baseUrl = await getBaseUrl();
-  const response = await fetch(`${baseUrl}/api/products/${id}`, {
-    cache: "no-store",
+  return prisma.product.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      name: true,
+      price: true,
+      image: true,
+      description: true,
+      category: true,
+      stock: true,
+    },
   });
-
-  if (response.status === 404) {
-    return null;
-  }
-
-  if (!response.ok) {
-    throw new Error("Failed to fetch product");
-  }
-
-  return (await response.json()) as ApiProduct;
 }
-
-const youMayLike = [
-  { id: "2", name: "Men Blazers Set", price: "$7.00 - $99.50", image: "/images/laptop.png" },
-  { id: "3", name: "Men Shirt Sleeve", price: "$7.00 - $99.50", image: "/images/smartphone.png" },
-  { id: "4", name: "Apple Watch Series", price: "$7.00 - $99.50", image: "/images/smart watch.png" },
-  { id: "5", name: "Basketball Crew", price: "$7.00 - $99.50", image: "/images/headphones.png" },
-  { id: "6", name: "New Summer Shirt", price: "$7.00 - $99.50", image: "/images/canon camera.png" },
-];
-
-const related = [
-  { id: "7", name: "Xiaomi Redmi 8 Original", price: "$32.00-$40.00", image: "/images/smartphone.png" },
-  { id: "8", name: "Xiaomi Redmi 8 Original", price: "$32.00-$40.00", image: "/images/smart watch.png" },
-  { id: "9", name: "Xiaomi Redmi 8 Original", price: "$32.00-$40.00", image: "/images/headphones.png" },
-  { id: "10", name: "Xiaomi Redmi 8 Original", price: "$32.00-$40.00", image: "/images/laptop.png" },
-  { id: "11", name: "Xiaomi Redmi 8 Original", price: "$32.00-$40.00", image: "/images/canon camera.png" },
-  { id: "12", name: "Xiaomi Redmi 8 Original", price: "$32.00-$40.00", image: "/images/smartphone.png" },
-];
 
 interface ProductPageProps {
   params: Promise<{
@@ -106,6 +76,35 @@ export default async function ProductPage({ params }: ProductPageProps) {
     { amount: Number((product.price * 0.94).toFixed(2)), quantity: "10-50 pcs" },
     { amount: Number((product.price * 0.86).toFixed(2)), quantity: "50+ pcs" },
   ];
+
+  const youMayLike = await prisma.product.findMany({
+    where: {
+      id: { not: product.id },
+      category: { equals: product.category, mode: "insensitive" },
+    },
+    take: 5,
+    orderBy: { createdAt: "desc" },
+    select: {
+      id: true,
+      name: true,
+      price: true,
+      image: true,
+    },
+  });
+
+  const related = await prisma.product.findMany({
+    where: {
+      id: { not: product.id },
+    },
+    take: 6,
+    orderBy: { createdAt: "desc" },
+    select: {
+      id: true,
+      name: true,
+      price: true,
+      image: true,
+    },
+  });
 
   const productImages = [product.image, ...PRODUCT_DETAILS.fallbackImages].slice(0, 6);
   const mainImage = productImages[0];
@@ -158,6 +157,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
             <span className="top-link-icon orders" aria-hidden="true" />
             <span>Orders</span>
           </a>
+          <AdminNavLink />
           <CartNavLink />
         </div>
       </section>
@@ -326,7 +326,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
               <span style={{ backgroundImage: `url('${item.image}')` }} />
               <div>
                 <p>{item.name}</p>
-                <small>{item.price}</small>
+                <small>${item.price.toFixed(2)}</small>
               </div>
             </Link>
           ))}
@@ -340,7 +340,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
             <Link href={`/product/${item.id}`} key={item.id} className={styles.relatedItem}>
               <span style={{ backgroundImage: `url('${item.image}')` }} />
               <p>{item.name}</p>
-              <small>{item.price}</small>
+              <small>${item.price.toFixed(2)}</small>
             </Link>
           ))}
         </div>

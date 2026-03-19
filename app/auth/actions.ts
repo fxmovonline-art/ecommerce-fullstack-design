@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 
 import { createSession, clearSession, hashPassword, verifyPassword } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { autoPromoteTestAdmin } from "@/app/auth/admin-actions";
 
 export type AuthFormState = {
   error?: string;
@@ -131,6 +132,9 @@ export async function loginAction(_: AuthFormState, formData: FormData): Promise
     }
 
     await createSession(user.id);
+
+    // Auto-promote test@gmail.com to ADMIN
+    await autoPromoteTestAdmin();
   } catch {
     return {
       error: "Unable to log you in right now. Please try again.",
