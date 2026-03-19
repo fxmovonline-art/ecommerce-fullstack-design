@@ -1,0 +1,540 @@
+.productPage {
+  padding-top: 12px;
+  padding-bottom: 24px;
+}
+
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #7b8798;
+  font-size: 13px;
+}
+
+.breadcrumbs strong {
+  color: #4a5a70;
+  font-weight: 500;
+}
+
+.productCard {
+  display: grid;
+  grid-template-columns: minmax(260px, 340px) minmax(320px, 1fr) 260px;
+  gap: 16px;
+  padding: 14px;
+}
+
+.gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mainImage {
+  border: 1px solid #dee6f0;
+  border-radius: 8px;
+  min-height: 320px;
+  background-size: 70%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #f5f8fc;
+}
+
+.thumbRow {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+}
+
+.thumbBtn {
+  border: 1px solid #d6e0ec;
+  background: #fff;
+  border-radius: 6px;
+  padding: 4px;
+  cursor: pointer;
+}
+
+.thumbBtn span {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  background-size: 68%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #f4f7fb;
+  border-radius: 4px;
+}
+
+.activeThumb {
+  border-color: #2b7cff;
+  box-shadow: 0 0 0 2px #e5efff;
+}
+
+.productInfo h1 {
+  margin: 4px 0 8px;
+  font-size: 30px;
+  line-height: 1;
+}
+
+.stock {
+  margin: 0;
+  color: #25a947;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.rating {
+  margin: 0 0 12px;
+  color: #6f7d92;
+  font-size: 13px;
+}
+
+.priceGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border: 1px solid #e2e9f2;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+
+.priceGrid article {
+  background: #fff0e8;
+  padding: 10px;
+  border-right: 1px solid #ecd8cb;
+}
+
+.priceGrid article:nth-child(2),
+.priceGrid article:nth-child(3) {
+  background: #fff;
+}
+
+.priceGrid article:last-child {
+  border-right: 0;
+}
+
+.priceGrid strong {
+  display: block;
+  color: #e84a21;
+  font-size: 21px;
+  line-height: 1;
+}
+
+.priceGrid article:nth-child(2) strong,
+.priceGrid article:nth-child(3) strong {
+  color: #1f2c3e;
+}
+
+.priceGrid span {
+  font-size: 12px;
+  color: #6f7d92;
+}
+
+.actionsRow {
+  margin-bottom: 14px;
+}
+
+.addToCartBtn {
+  min-height: 42px;
+  padding: 0 18px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #00b517;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.addToCartBtn:hover {
+  background: #009613;
+}
+
+.metaList {
+  border-top: 1px solid #e3eaf2;
+}
+
+.metaList p {
+  margin: 0;
+  padding: 9px 0;
+  border-bottom: 1px solid #edf2f7;
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 10px;
+}
+
+.metaList span {
+  color: #7a889b;
+  font-size: 14px;
+}
+
+.metaList strong {
+  color: #364a63;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.supplierCard {
+  padding: 12px;
+  height: fit-content;
+}
+
+.supplierTop {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e3eaf2;
+}
+
+.supplierTop span {
+  width: 46px;
+  height: 46px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  background: #dcf4f2;
+  color: #57a6a1;
+  font-weight: 700;
+  font-size: 24px;
+}
+
+.supplierTop p {
+  margin: 0;
+  color: #7c8ca2;
+  font-size: 12px;
+}
+
+.supplierTop strong {
+  font-size: 14px;
+  color: #1c2b3f;
+}
+
+.supplierCard ul {
+  list-style: none;
+  padding: 12px 0;
+  margin: 0;
+  border-bottom: 1px solid #e3eaf2;
+}
+
+.supplierCard li {
+  font-size: 13px;
+  color: #6b7b91;
+  margin-bottom: 8px;
+}
+
+.supplierCard button,
+.supplierCard a {
+  width: 100%;
+  min-height: 37px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.supplierCard button {
+  border: 0;
+  color: #fff;
+  background: #2b7cff;
+}
+
+.supplierCard a {
+  border: 1px solid #d6e0ec;
+  color: #2b7cff;
+  text-decoration: none;
+}
+
+.saveBtn {
+  border: 1px solid #d6e0ec !important;
+  background: #fff !important;
+  color: #52709a !important;
+}
+
+.detailGrid {
+  display: grid;
+  grid-template-columns: 1fr 250px;
+  gap: 14px;
+}
+
+.descriptionCard {
+  padding: 0 0 14px;
+  overflow: hidden;
+}
+
+.tabs {
+  display: flex;
+  gap: 14px;
+  border-bottom: 1px solid #e3eaf2;
+  padding: 0 16px;
+}
+
+.tabs button {
+  border: 0;
+  background: none;
+  color: #76859a;
+  min-height: 44px;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+}
+
+.tabs .activeTab {
+  color: #2b7cff;
+  border-bottom-color: #2b7cff;
+}
+
+.descriptionCard p {
+  color: #5f6f84;
+  font-size: 14px;
+  line-height: 1.45;
+  margin: 12px 16px;
+}
+
+.specTable {
+  margin: 14px 16px;
+  border: 1px solid #e2e9f2;
+}
+
+.specTable p {
+  margin: 0;
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  border-bottom: 1px solid #e2e9f2;
+}
+
+.specTable p:last-child {
+  border-bottom: 0;
+}
+
+.specTable span,
+.specTable strong {
+  padding: 9px 10px;
+  font-size: 13px;
+}
+
+.specTable span {
+  background: #f5f8fc;
+  color: #6f7d92;
+  border-right: 1px solid #e2e9f2;
+}
+
+.specTable strong {
+  font-weight: 500;
+  color: #4e5d73;
+}
+
+.featureList {
+  margin: 12px 16px 0;
+  padding-left: 18px;
+  color: #5f6f84;
+  font-size: 14px;
+}
+
+.featureList li {
+  margin-bottom: 8px;
+}
+
+.likeCard {
+  padding: 14px;
+}
+
+.likeCard h3 {
+  margin: 0 0 12px;
+  font-size: 16px;
+}
+
+.likeItem {
+  display: grid;
+  grid-template-columns: 62px 1fr;
+  gap: 10px;
+  margin-bottom: 10px;
+  text-decoration: none;
+}
+
+.likeItem span {
+  width: 62px;
+  height: 62px;
+  border: 1px solid #e1e8f1;
+  border-radius: 6px;
+  background-size: 70%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #f5f8fc;
+}
+
+.likeItem p {
+  margin: 0;
+  font-size: 14px;
+  color: #27374b;
+}
+
+.likeItem small {
+  color: #8493a8;
+}
+
+.relatedCard {
+  padding: 12px;
+}
+
+.relatedCard h2 {
+  margin: 0 0 12px;
+  font-size: 24px;
+}
+
+.relatedGrid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+}
+
+.relatedItem {
+  text-decoration: none;
+}
+
+.relatedItem span {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 8px;
+  border: 1px solid #e3eaf2;
+  background-size: 70%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #f5f8fc;
+}
+
+.relatedItem p {
+  margin: 8px 0 2px;
+  font-size: 13px;
+  color: #33475e;
+}
+
+.relatedItem small {
+  color: #7f8ea3;
+  font-size: 12px;
+}
+
+.discountBanner {
+  background: linear-gradient(110deg, #1972f1 0%, #1972f1 58%, #0060d8 58%, #0060d8 100%);
+  color: #fff;
+  border-radius: 8px;
+  padding: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.discountBanner h3 {
+  margin: 0;
+  font-size: 33px;
+  line-height: 1;
+}
+
+.discountBanner p {
+  margin: 5px 0 0;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.discountBanner button {
+  border: 0;
+  background: #ff9800;
+  color: #fff;
+  border-radius: 7px;
+  min-height: 40px;
+  padding: 0 18px;
+  font-weight: 600;
+}
+
+@media (max-width: 1160px) {
+  .productCard {
+    grid-template-columns: 1fr;
+  }
+
+  .detailGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .supplierCard {
+    order: 3;
+  }
+
+  .relatedGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .discountBanner {
+    flex-direction: column;
+    gap: 14px;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 720px) {
+  .breadcrumbs {
+    font-size: 12px;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .mainImage {
+    min-height: 230px;
+  }
+
+  .thumbRow {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .priceGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .priceGrid article {
+    border-right: 0;
+    border-bottom: 1px solid #ecd8cb;
+  }
+
+  .priceGrid article:last-child {
+    border-bottom: 0;
+  }
+
+  .metaList p,
+  .specTable p {
+    grid-template-columns: 1fr;
+  }
+
+  .specTable span {
+    border-right: 0;
+    border-bottom: 1px solid #e2e9f2;
+  }
+
+  .tabs {
+    gap: 8px;
+    padding: 0 10px;
+  }
+
+  .tabs button {
+    min-height: 38px;
+    font-size: 13px;
+  }
+
+  .descriptionCard p,
+  .specTable,
+  .featureList {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+  .relatedGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .discountBanner {
+    padding: 14px;
+  }
+
+  .discountBanner h3 {
+    font-size: 20px;
+  }
+}

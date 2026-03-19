@@ -1,0 +1,142 @@
+.authPage {
+  min-height: 100vh;
+  padding: 24px 0;
+  background:
+    radial-gradient(circle at top left, rgba(88, 181, 255, 0.18), transparent 30%),
+    linear-gradient(180deg, #f4f8fd 0%, #e8eef5 100%);
+}
+
+.authShell {
+  width: min(1080px, calc(100% - 24px));
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 20px;
+  align-items: stretch;
+}
+
+.storyCard,
+.formCard {
+  border: 1px solid #d6e0ec;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(10px);
+}
+
+.storyCard {
+  padding: 32px;
+  background:
+    linear-gradient(145deg, rgba(30, 96, 205, 0.96), rgba(43, 124, 255, 0.9)),
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.18), transparent 30%);
+  color: #fff;
+}
+
+.brandLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 36px;
+}
+
+.storyCard h1 {
+  margin: 0 0 12px;
+  font-size: 52px;
+  line-height: 0.95;
+}
+
+.storyCard p {
+  margin: 0;
+  max-width: 420px;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.storyList {
+  display: grid;
+  gap: 12px;
+  margin-top: 34px;
+}
+
+.storyList li {
+  list-style: none;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.storyList strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 15px;
+}
+
+.storyList span {
+  color: rgba(255, 255, 255, 0.76);
+  font-size: 13px;
+}
+
+.formCard {
+  padding: 28px;
+}
+
+.formCard h2 {
+  margin: 0;
+  font-size: 32px;
+  color: #1f2d40;
+}
+
+.formCard p {
+  margin: 8px 0 0;
+  color: #718198;
+  line-height: 1.5;
+}
+
+.switchLine {
+  margin-top: 18px;
+  color: #6b7b91;
+  font-size: 14px;
+}
+
+.switchLine a {
+  color: #2b7cff;
+  font-weight: 600;
+}
+
+.backHome {
+  display: inline-flex;
+  margin-top: 24px;
+  color: #587395;
+  font-size: 14px;
+}
+
+@media (max-width: 900px) {
+  .authShell {
+    grid-template-columns: 1fr;
+  }
+
+  .storyCard,
+  .formCard {
+    border-radius: 18px;
+  }
+
+  .storyCard h1 {
+    font-size: 38px;
+  }
+}
+
+@media (max-width: 560px) {
+  .authPage {
+    padding: 14px 0;
+  }
+
+  .storyCard,
+  .formCard {
+    padding: 18px;
+  }
+
+  .storyCard h1,
+  .formCard h2 {
+    font-size: 28px;
+  }
+}
