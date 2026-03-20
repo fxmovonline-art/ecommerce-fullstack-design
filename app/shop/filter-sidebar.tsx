@@ -11,19 +11,6 @@ type FilterState = {
   priceRange: [number, number];
 };
 
-const CATEGORIES = [
-  "Mobile accessory",
-  "Electronics",
-  "Smartphones",
-  "Modern tech",
-  "Sneakers",
-  "Wearables",
-  "Clothing",
-  "Accessories",
-  "Home",
-  "Furniture",
-];
-const BRANDS = ["Samsung", "Apple", "Pocco", "Metallic"];
 const FEATURES = [
   "Metallic",
   "Plastic cover",
@@ -35,11 +22,15 @@ const FEATURES = [
 interface FilterSidebarProps {
   filters: FilterState;
   setFilters: (filters: FilterState) => void;
+  categories: string[];
+  brands: string[];
 }
 
 export default function FilterSidebar({
   filters,
   setFilters,
+  categories,
+  brands,
 }: FilterSidebarProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -100,6 +91,21 @@ export default function FilterSidebar({
     });
   };
 
+  const clearAllFilters = () => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("category");
+
+    setFilters({
+      categories: [],
+      brands: [],
+      features: [],
+      priceRange: [0, 2000],
+    });
+
+    const query = params.toString();
+    router.push(query ? `/shop?${query}` : "/shop");
+  };
+
   return (
     <div className={styles.filterSidebar}>
       <h3>Category</h3>
@@ -112,7 +118,7 @@ export default function FilterSidebar({
       </button>
       {expandedSections.category && (
         <div className={styles.filterGroup}>
-          {CATEGORIES.map((cat) => (
+          {categories.map((cat) => (
             <label key={cat}>
               <input
                 type="checkbox"
@@ -139,7 +145,7 @@ export default function FilterSidebar({
       </button>
       {expandedSections.brand && (
         <div className={styles.filterGroup}>
-          {BRANDS.map((brand) => (
+          {brands.map((brand) => (
             <label key={brand}>
               <input
                 type="checkbox"
@@ -216,7 +222,7 @@ export default function FilterSidebar({
         </div>
       )}
 
-      <button className={styles.clearFilters}>Clear all filter</button>
+      <button className={styles.clearFilters} onClick={clearAllFilters}>Clear all filter</button>
     </div>
   );
 }

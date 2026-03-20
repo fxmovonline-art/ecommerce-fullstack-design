@@ -51,6 +51,7 @@ type ShopClientProps = {
 export default function ShopClient({ initialProducts }: ShopClientProps) {
   const searchParams = useSearchParams();
   const searchQuery = (searchParams.get("search") ?? "").trim().toLowerCase();
+  const categoryParam = (searchParams.get("category") ?? "").trim().toLowerCase();
 
   const [viewMode, setViewMode] = useState<"grid" | "list">("list");
   const [filters, setFilters] = useState<FilterState>({
@@ -79,16 +80,36 @@ export default function ShopClient({ initialProducts }: ShopClientProps) {
     [initialProducts],
   );
 
-  // Get category from URL params
-  const category = searchParams.get("category") ?? "";
+  const availableCategories = useMemo(
+    () => Array.from(new Set(mappedProducts.map((product) => product.category))).sort((a, b) => a.localeCompare(b)),
+    [mappedProducts],
+  );
+
+  const availableBrands = useMemo(
+    () => Array.from(new Set(mappedProducts.map((product) => product.brand))).sort((a, b) => a.localeCompare(b)),
+    [mappedProducts],
+  );
+
+  const category = categoryParam;
+
+  const formatCategoryLabel = (value: string) =>
+    value
+      .split(/[-_\s]+/)
+      .filter(Boolean)
+      .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+      .join(" ");
 
   const filteredProducts = mappedProducts.filter((product) => {
+    const normalizedProductCategory = product.category.toLowerCase();
     const matchesSearch =
       searchQuery.length === 0 ||
       product.name.toLowerCase().includes(searchQuery) ||
-      product.category.toLowerCase().includes(searchQuery);
+      normalizedProductCategory.includes(searchQuery);
 
-    if (!matchesSearch) {
+    const matchesUrlCategory =
+      category.length === 0 || normalizedProductCategory === category;
+
+    if (!matchesSearch || !matchesUrlCategory) {
       return false;
     }
 
@@ -162,7 +183,7 @@ export default function ShopClient({ initialProducts }: ShopClientProps) {
               <span>{">"}</span>
               <Link href="/shop">All Products</Link>
               <span>{">"}</span>
-              <strong>{category.charAt(0).toUpperCase() + category.slice(1)}</strong>
+              <strong>{formatCategoryLabel(category)}</strong>
             </>
           )}
           {!category && (
@@ -188,7 +209,12 @@ export default function ShopClient({ initialProducts }: ShopClientProps) {
         <aside
           className={`${styles.sidebar} ${showMobileFilters ? styles.showMobile : ""}`}
         >
-          <FilterSidebar filters={filters} setFilters={setFilters} />
+          <FilterSidebar
+            filters={filters}
+            setFilters={setFilters}
+            categories={availableCategories}
+            brands={availableBrands}
+          />
           <button
             className={styles.closeMobileFilters}
             onClick={() => setShowMobileFilters(false)}
