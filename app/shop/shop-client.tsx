@@ -99,6 +99,30 @@ export default function ShopClient({ initialProducts }: ShopClientProps) {
       .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
       .join(" ");
 
+  const selectedCategoryLabel = category ? formatCategoryLabel(category) : "All Products";
+
+  const mobileQuickCategories = useMemo(() => {
+    if (availableCategories.length === 0) {
+      return [] as string[];
+    }
+
+    const normalizedSelected = category;
+    const ordered = [...availableCategories].sort((a, b) => {
+      const aIsSelected = a.toLowerCase() === normalizedSelected;
+      const bIsSelected = b.toLowerCase() === normalizedSelected;
+
+      if (aIsSelected && !bIsSelected) {
+        return -1;
+      }
+      if (!aIsSelected && bIsSelected) {
+        return 1;
+      }
+      return a.localeCompare(b);
+    });
+
+    return ordered.slice(0, 6);
+  }, [availableCategories, category]);
+
   const filteredProducts = mappedProducts.filter((product) => {
     const normalizedProductCategory = product.category.toLowerCase();
     const matchesSearch =
@@ -172,6 +196,51 @@ export default function ShopClient({ initialProducts }: ShopClientProps) {
           <a href="#">English, USD</a>
           <a href="#">Ship to DE</a>
         </div>
+      </section>
+
+      <section className={styles.mobileCategoryTop}>
+        <div className={styles.mobileCategoryTopRow}>
+          <Link href="/shop" aria-label="Back to all products" className={styles.mobileBackBtn}>
+            <span aria-hidden="true">←</span>
+          </Link>
+          <strong>{selectedCategoryLabel}</strong>
+          <div className={styles.mobileTopIcons}>
+            <CartNavLink variant="mobile" />
+            <Link href="/login" className={styles.mobileAccountBtn} aria-label="Account">
+              <span aria-hidden="true">◦</span>
+            </Link>
+          </div>
+        </div>
+
+        <form action="/shop" className={styles.mobileSearchForm}>
+          <input
+            type="search"
+            name="search"
+            defaultValue={searchParams.get("search") ?? ""}
+            placeholder="Search"
+            aria-label="Search products"
+          />
+          {category ? <input type="hidden" name="category" value={category} /> : null}
+        </form>
+
+        {mobileQuickCategories.length > 0 ? (
+          <div className={styles.mobileCategoryTabs}>
+            {mobileQuickCategories.map((quickCategory) => {
+              const isActive = quickCategory.toLowerCase() === category;
+              const href = isActive ? "/shop" : `/shop?category=${encodeURIComponent(quickCategory.toLowerCase())}`;
+
+              return (
+                <Link
+                  key={quickCategory}
+                  href={href}
+                  className={`${styles.mobileCategoryTab} ${isActive ? styles.activeMobileCategoryTab : ""}`}
+                >
+                  {formatCategoryLabel(quickCategory)}
+                </Link>
+              );
+            })}
+          </div>
+        ) : null}
       </section>
 
       {/* Breadcrumbs */}
