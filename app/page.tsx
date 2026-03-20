@@ -101,10 +101,10 @@ export default async function Home() {
           <Link href="/shop" className="mobile-menu-btn" aria-label="Open categories">
             <span className="mobile-menu-icon" />
           </Link>
-          <span className="brand-mark">
+          <Link href="/" className="brand-mark" aria-label="Go to homepage">
             <span className="brand-icon">B</span>
             <span className="brand-text">Brand</span>
-          </span>
+          </Link>
           <div className="mobile-header-icons">
             <CartNavLink variant="mobile" />
             <Link

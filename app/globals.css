@@ -986,23 +986,66 @@ textarea {
   .mobile-cart-icon,
   .mobile-user-icon {
     display: inline-block;
-    width: 26px;
-    height: 26px;
-    background-position: center;
-    background-size: contain;
-    background-repeat: no-repeat;
+    width: 22px;
+    height: 22px;
+    position: relative;
   }
 
-  .mobile-menu-icon {
-    background-image: url('/window.svg');
+  .mobile-menu-icon::before {
+    content: "";
+    position: absolute;
+    left: 4px;
+    top: 5px;
+    width: 14px;
+    height: 2px;
+    background: #4f6078;
+    border-radius: 999px;
+    box-shadow: 0 4px 0 #4f6078, 0 8px 0 #4f6078;
   }
 
-  .mobile-cart-icon {
-    background-image: url('/file.svg');
+  .mobile-cart-icon::before {
+    content: "";
+    position: absolute;
+    left: 5px;
+    top: 8px;
+    width: 12px;
+    height: 8px;
+    border: 1.5px solid #4f6078;
+    border-radius: 2px;
   }
 
-  .mobile-user-icon {
-    background-image: url('/globe.svg');
+  .mobile-cart-icon::after {
+    content: "";
+    position: absolute;
+    left: 7px;
+    top: 5px;
+    width: 7px;
+    height: 4px;
+    border-top: 1.5px solid #4f6078;
+    transform: skewX(-24deg);
+  }
+
+  .mobile-user-icon::before {
+    content: "";
+    position: absolute;
+    left: 7px;
+    top: 3px;
+    width: 8px;
+    height: 8px;
+    border: 1.5px solid #4f6078;
+    border-radius: 999px;
+  }
+
+  .mobile-user-icon::after {
+    content: "";
+    position: absolute;
+    left: 5px;
+    bottom: 3px;
+    width: 12px;
+    height: 6px;
+    border: 1.5px solid #4f6078;
+    border-top: 0;
+    border-radius: 0 0 10px 10px;
   }
 
   .mobile-header-icons {
