@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import AddToCartButton from "@/app/components/add-to-cart-button";
 import AdminNavLink from "@/app/components/admin-nav-link";
 import CartNavLink from "@/app/components/cart-nav-link";
+import SaveForLaterButton from "@/app/components/save-for-later-button";
 import { prisma } from "@/lib/prisma";
 import styles from "./page.module.css";
 
@@ -111,24 +112,16 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   return (
     <main className={`market-page ${styles.productPage}`}>
-      <header className="mobile-header">
-        <div className="mobile-header-row">
-          <button className="mobile-menu-btn" aria-label="Menu">
-            <span className="mobile-menu-icon" />
-          </button>
-          <span className="brand-mark">
-            <span className="brand-icon">B</span>
-            <span className="brand-text">Brand</span>
-          </span>
-          <div className="mobile-header-icons">
-              <CartNavLink variant="mobile" />
-            <button aria-label="User" className="mobile-header-btn">
-              <span className="mobile-user-icon" />
-            </button>
+      <header className={styles.mobileProductHeader}>
+        <div className={styles.mobileHeaderBar}>
+          <Link href="/shop" className={styles.mobileBackBtn} aria-label="Back to shop">←</Link>
+          <p>{product.category}</p>
+          <div className={styles.mobileHeaderIcons}>
+            <CartNavLink variant="mobile" />
+            <Link href="/login" className={styles.mobileAccountBtn} aria-label="Account">
+              <span className={styles.mobileUserGlyph} aria-hidden="true" />
+            </Link>
           </div>
-        </div>
-        <div className="mobile-search-row">
-          <input aria-label="Search" placeholder="Search" />
         </div>
       </header>
 
@@ -192,6 +185,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
       <section className={`container panel ${styles.productCard}`}>
         <div className={styles.gallery}>
           <div className={styles.mainImage} style={{ backgroundImage: `url('${mainImage}')` }} />
+          <div className={styles.galleryControls} aria-hidden="true">
+            <span>‹</span>
+            <span>›</span>
+          </div>
           <div className={styles.thumbRow}>
             {productImages.map((image, index) => (
               <button
@@ -209,9 +206,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
         <div className={styles.productInfo}>
           <p className={styles.stock}>{product.stock > 0 ? "In stock" : "Out of stock"}</p>
           <h1>{product.name}</h1>
-          <p className={styles.rating}>
-            {PRODUCT_DETAILS.rating} • {PRODUCT_DETAILS.reviews} reviews • {PRODUCT_DETAILS.sold} sold
-          </p>
+          <p className={styles.rating}>★★★★★ <span>{PRODUCT_DETAILS.rating}</span> • {PRODUCT_DETAILS.reviews} reviews • {PRODUCT_DETAILS.sold} sold</p>
 
           <div className={styles.priceGrid}>
             {priceTiers.map((price, idx) => (
@@ -231,6 +226,16 @@ export default async function ProductPage({ params }: ProductPageProps) {
               description={product.description}
               category={product.category}
               className={styles.addToCartBtn}
+            />
+            <SaveForLaterButton
+              id={product.id}
+              name={product.name}
+              price={product.price}
+              image={product.image}
+              description={product.description}
+              category={product.category}
+              className={styles.iconSaveBtn}
+              label="♡"
             />
           </div>
 
@@ -281,9 +286,15 @@ export default async function ProductPage({ params }: ProductPageProps) {
           </ul>
           <button>Send inquiry</button>
           <a href="#">Seller&apos;s profile</a>
-          <button type="button" className={styles.saveBtn}>
-            Save for later
-          </button>
+          <SaveForLaterButton
+            id={product.id}
+            name={product.name}
+            price={product.price}
+            image={product.image}
+            description={product.description}
+            category={product.category}
+            className={styles.saveBtn}
+          />
         </aside>
       </section>
 

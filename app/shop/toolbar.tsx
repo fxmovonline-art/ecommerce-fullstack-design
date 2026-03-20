@@ -5,19 +5,30 @@ import styles from "./shop.module.css";
 interface ToolbarProps {
   viewMode: "grid" | "list";
   setViewMode: (mode: "grid" | "list") => void;
+  sortBy: "featured" | "newest" | "price-asc" | "price-desc";
+  setSortBy: (value: "featured" | "newest" | "price-asc" | "price-desc") => void;
   itemCount: number;
   onMobileFilterClick: () => void;
+  activeFilterCount: number;
   category?: string;
 }
 
 export default function Toolbar({
   viewMode,
   setViewMode,
+  sortBy,
+  setSortBy,
   itemCount,
+  onMobileFilterClick,
+  activeFilterCount,
   category,
 }: ToolbarProps) {
-  const categoryDisplay = category 
-    ? category.charAt(0).toUpperCase() + category.slice(1)
+  const categoryDisplay = category
+    ? category
+        .split(/[-_\s]+/)
+        .filter(Boolean)
+        .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+        .join(" ")
     : "All Products";
 
   return (
@@ -31,13 +42,33 @@ export default function Toolbar({
             <input type="checkbox" />
             <span>Verified only</span>
           </label>
-          <select>
-            <option>Featured</option>
-            <option>Newest</option>
-            <option>Price: Low to High</option>
-            <option>Price: High to Low</option>
+          <select
+            value={sortBy}
+            onChange={(event) => setSortBy(event.target.value as "featured" | "newest" | "price-asc" | "price-desc")}
+          >
+            <option value="featured">Featured</option>
+            <option value="newest">Newest</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
           </select>
         </div>
+      </div>
+
+      <div className={styles.mobileToolbarRow}>
+        <button
+          type="button"
+          className={styles.mobileControlBtn}
+          onClick={() => setSortBy(sortBy === "newest" ? "featured" : "newest")}
+        >
+          Sort: {sortBy === "newest" ? "Newest" : "Featured"}
+        </button>
+        <button
+          type="button"
+          className={styles.mobileControlBtn}
+          onClick={onMobileFilterClick}
+        >
+          Filter ({activeFilterCount})
+        </button>
       </div>
 
       <div className={styles.viewToggle}>

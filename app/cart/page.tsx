@@ -14,8 +14,12 @@ const money = new Intl.NumberFormat("en-US", {
 
 export default function CartPage() {
   const items = useCart((state) => state.items);
+  const savedItems = useCart((state) => state.savedItems);
   const removeItem = useCart((state) => state.removeItem);
+  const removeSavedItem = useCart((state) => state.removeSavedItem);
   const updateQuantity = useCart((state) => state.updateQuantity);
+  const moveToSaved = useCart((state) => state.moveToSaved);
+  const moveToCart = useCart((state) => state.moveToCart);
 
   const changeQuantity = (id: string, next: number) => {
     updateQuantity(id, Math.max(1, next));
@@ -83,6 +87,9 @@ export default function CartPage() {
                             <Trash2 size={14} />
                             Remove
                           </button>
+                          <button type="button" className={styles.secondaryBtn} onClick={() => moveToSaved(item.id)}>
+                            Save for later
+                          </button>
                         </div>
                       </article>
                     );
@@ -94,6 +101,31 @@ export default function CartPage() {
                     Back to shop
                   </Link>
                 </div>
+
+                {savedItems.length > 0 ? (
+                  <section className={styles.savedSection}>
+                    <h2 className={styles.savedTitle}>Saved for later ({savedItems.length})</h2>
+                    <div className={styles.savedGrid}>
+                      {savedItems.map((item) => (
+                        <article key={item.id} className={styles.savedCard}>
+                          <div className={styles.savedImageWrap}>
+                            <Image src={item.image} alt={item.name} width={110} height={110} className={styles.savedImage} />
+                          </div>
+                          <h3>{item.name}</h3>
+                          <p>{money.format(item.price)}</p>
+                          <div className={styles.savedActions}>
+                            <button type="button" className={styles.savedMoveBtn} onClick={() => moveToCart(item.id)}>
+                              Move to cart
+                            </button>
+                            <button type="button" className={styles.savedRemoveBtn} onClick={() => removeSavedItem(item.id)}>
+                              Remove
+                            </button>
+                          </div>
+                        </article>
+                      ))}
+                    </div>
+                  </section>
+                ) : null}
               </>
             )}
           </div>

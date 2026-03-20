@@ -54,6 +54,7 @@ export default function ShopClient({ initialProducts }: ShopClientProps) {
   const categoryParam = (searchParams.get("category") ?? "").trim().toLowerCase();
 
   const [viewMode, setViewMode] = useState<"grid" | "list">("list");
+  const [sortBy, setSortBy] = useState<"featured" | "newest" | "price-asc" | "price-desc">("featured");
   const [filters, setFilters] = useState<FilterState>({
     categories: [] as string[],
     brands: [] as string[],
@@ -123,37 +124,58 @@ export default function ShopClient({ initialProducts }: ShopClientProps) {
     return ordered.slice(0, 6);
   }, [availableCategories, category]);
 
-  const filteredProducts = mappedProducts.filter((product) => {
-    const normalizedProductCategory = product.category.toLowerCase();
-    const matchesSearch =
-      searchQuery.length === 0 ||
-      product.name.toLowerCase().includes(searchQuery) ||
-      normalizedProductCategory.includes(searchQuery);
+  const filteredProducts = useMemo(() => {
+    const list = mappedProducts.filter((product) => {
+      const normalizedProductCategory = product.category.toLowerCase();
+      const matchesSearch =
+        searchQuery.length === 0 ||
+        product.name.toLowerCase().includes(searchQuery) ||
+        normalizedProductCategory.includes(searchQuery);
 
-    const matchesUrlCategory =
-      category.length === 0 || normalizedProductCategory === category;
+      const matchesUrlCategory =
+        category.length === 0 || normalizedProductCategory === category;
 
-    if (!matchesSearch || !matchesUrlCategory) {
-      return false;
+      if (!matchesSearch || !matchesUrlCategory) {
+        return false;
+      }
+
+      if (
+        filters.categories.length > 0 &&
+        !filters.categories.includes(product.category)
+      ) {
+        return false;
+      }
+      if (filters.brands.length > 0 && !filters.brands.includes(product.brand)) {
+        return false;
+      }
+      if (
+        product.price < filters.priceRange[0] ||
+        product.price > filters.priceRange[1]
+      ) {
+        return false;
+      }
+      return true;
+    });
+
+    const sorted = [...list];
+    if (sortBy === "newest") {
+      sorted.sort((a, b) => b.id.localeCompare(a.id));
+    }
+    if (sortBy === "price-asc") {
+      sorted.sort((a, b) => a.price - b.price);
+    }
+    if (sortBy === "price-desc") {
+      sorted.sort((a, b) => b.price - a.price);
     }
 
-    if (
-      filters.categories.length > 0 &&
-      !filters.categories.includes(product.category)
-    ) {
-      return false;
-    }
-    if (filters.brands.length > 0 && !filters.brands.includes(product.brand)) {
-      return false;
-    }
-    if (
-      product.price < filters.priceRange[0] ||
-      product.price > filters.priceRange[1]
-    ) {
-      return false;
-    }
-    return true;
-  });
+    return sorted;
+  }, [mappedProducts, searchQuery, category, filters, sortBy]);
+
+  const activeFilterCount =
+    filters.categories.length +
+    filters.brands.length +
+    filters.features.length +
+    (filters.priceRange[0] > 0 || filters.priceRange[1] < 2000 ? 1 : 0);
 
   return (
     <main className={styles.shopPage}>
@@ -198,7 +220,7 @@ export default function ShopClient({ initialProducts }: ShopClientProps) {
         </div>
       </section>
 
-      <section className={styles.mobileCategoryTop}>
+      {category ? <section className={styles.mobileCategoryTop}>
         <div className={styles.mobileCategoryTopRow}>
           <Link href="/shop" aria-label="Back to all products" className={styles.mobileBackBtn}>
             <span aria-hidden="true">←</span>
@@ -207,7 +229,7 @@ export default function ShopClient({ initialProducts }: ShopClientProps) {
           <div className={styles.mobileTopIcons}>
             <CartNavLink variant="mobile" />
             <Link href="/login" className={styles.mobileAccountBtn} aria-label="Account">
-              <span aria-hidden="true">◦</span>
+              <span className={styles.mobileUserIconGlyph} aria-hidden="true" />
             </Link>
           </div>
         </div>
@@ -241,7 +263,7 @@ export default function ShopClient({ initialProducts }: ShopClientProps) {
             })}
           </div>
         ) : null}
-      </section>
+      </section> : null}
 
       {/* Breadcrumbs */}
       <nav className={styles.breadcrumbs}>
@@ -266,14 +288,6 @@ export default function ShopClient({ initialProducts }: ShopClientProps) {
 
       {/* Main shop grid */}
       <div className={`container ${styles.shopGrid}`}>
-        {/* Mobile filter button */}
-        <button
-          className={styles.mobileFilterBtn}
-          onClick={() => setShowMobileFilters(!showMobileFilters)}
-        >
-          <span>⚙ Filters</span>
-        </button>
-
         {/* Sidebar - desktop visible, mobile can slide */}
         <aside
           className={`${styles.sidebar} ${showMobileFilters ? styles.showMobile : ""}`}
@@ -297,8 +311,11 @@ export default function ShopClient({ initialProducts }: ShopClientProps) {
           <Toolbar
             viewMode={viewMode}
             setViewMode={setViewMode}
+            sortBy={sortBy}
+            setSortBy={setSortBy}
             itemCount={filteredProducts.length}
             onMobileFilterClick={() => setShowMobileFilters(true)}
+            activeFilterCount={activeFilterCount}
             category={category}
           />
 

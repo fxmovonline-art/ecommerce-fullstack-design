@@ -3,6 +3,67 @@
   padding-bottom: 24px;
 }
 
+.mobileProductHeader {
+  display: none;
+}
+
+.mobileHeaderBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.mobileHeaderBar p {
+  margin: 0;
+  flex: 1;
+  font-size: 13px;
+  font-weight: 600;
+  color: #31455f;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mobileBackBtn,
+.mobileAccountBtn {
+  width: 26px;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #4e627b;
+  text-decoration: none;
+}
+
+.mobileHeaderIcons {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.mobileUserGlyph {
+  width: 10px;
+  height: 10px;
+  border: 1.4px solid #5f7390;
+  border-radius: 999px;
+  display: inline-block;
+  position: relative;
+}
+
+.mobileUserGlyph::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -7px;
+  transform: translateX(-50%);
+  width: 12px;
+  height: 6px;
+  border: 1.4px solid #5f7390;
+  border-top: 0;
+  border-radius: 0 0 8px 8px;
+}
+
 .breadcrumbs {
   display: flex;
   align-items: center;
@@ -37,6 +98,10 @@
   background-position: center;
   background-repeat: no-repeat;
   background-color: #f5f8fc;
+}
+
+.galleryControls {
+  display: none;
 }
 
 .thumbRow {
@@ -88,6 +153,11 @@
   font-size: 13px;
 }
 
+.rating span {
+  color: #f08a00;
+  font-weight: 600;
+}
+
 .priceGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -130,6 +200,9 @@
 }
 
 .actionsRow {
+  display: flex;
+  gap: 8px;
+  align-items: center;
   margin-bottom: 14px;
 }
 
@@ -144,6 +217,17 @@
   color: #fff;
   text-decoration: none;
   font-weight: 700;
+}
+
+.iconSaveBtn {
+  width: 42px;
+  height: 42px;
+  border-radius: 8px;
+  border: 1px solid #d8e2ef;
+  background: #fff;
+  color: #2b7cff;
+  font-size: 20px;
+  line-height: 1;
 }
 
 .addToCartBtn:hover {
@@ -472,36 +556,124 @@
 }
 
 @media (max-width: 720px) {
+  .mobileProductHeader {
+    display: block;
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    padding: 8px 10px;
+    background: #f4f6f9;
+    border-bottom: 1px solid #dde5ef;
+  }
+
+  .productPage {
+    padding-top: 0;
+    gap: 8px;
+  }
+
   .breadcrumbs {
-    font-size: 12px;
-    overflow-x: auto;
-    white-space: nowrap;
+    display: none;
+  }
+
+  .productCard {
+    padding: 8px;
+    gap: 8px;
+  }
+
+  .gallery {
+    position: relative;
   }
 
   .mainImage {
-    min-height: 230px;
+    min-height: 212px;
+    border-radius: 6px;
+    background-size: contain;
+  }
+
+  .galleryControls {
+    display: inline-flex;
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
+    border-radius: 999px;
+    overflow: hidden;
+    border: 1px solid #d8e1ec;
+    background: rgba(255, 255, 255, 0.96);
+  }
+
+  .galleryControls span {
+    width: 19px;
+    height: 19px;
+    display: grid;
+    place-items: center;
+    color: #7a889b;
+    font-size: 12px;
+    border-right: 1px solid #e2e9f1;
+  }
+
+  .galleryControls span:last-child {
+    border-right: 0;
   }
 
   .thumbRow {
-    grid-template-columns: repeat(3, 1fr);
+    display: none;
+  }
+
+  .productInfo h1 {
+    font-size: 18px;
+    line-height: 1.25;
+    margin: 2px 0 6px;
+  }
+
+  .rating {
+    font-size: 11px;
+    margin-bottom: 10px;
   }
 
   .priceGrid {
-    grid-template-columns: 1fr;
+    display: none;
   }
 
-  .priceGrid article {
-    border-right: 0;
-    border-bottom: 1px solid #ecd8cb;
+  .actionsRow {
+    margin-bottom: 10px;
   }
 
-  .priceGrid article:last-child {
-    border-bottom: 0;
+  .addToCartBtn {
+    flex: 1;
+    min-height: 36px;
+    border-radius: 7px;
+    background: #2b7cff;
+    font-size: 14px;
+  }
+
+  .iconSaveBtn {
+    width: 36px;
+    height: 36px;
+    border-radius: 7px;
+    font-size: 17px;
+  }
+
+  .metaList {
+    border-top: 0;
+    background: #fafbfd;
+    border: 1px solid #e4ebf3;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .metaList p {
+    grid-template-columns: 92px 1fr;
+    padding: 7px 8px;
+  }
+
+  .metaList span,
+  .metaList strong {
+    font-size: 12px;
   }
 
   .metaList p,
   .specTable p {
-    grid-template-columns: 1fr;
+    grid-template-columns: 92px 1fr;
   }
 
   .specTable span {
@@ -524,6 +696,27 @@
   .featureList {
     margin-left: 10px;
     margin-right: 10px;
+  }
+
+  .supplierCard,
+  .detailGrid,
+  .discountBanner,
+  .relatedCard {
+    display: none;
+  }
+
+  .descriptionCard {
+    border: 0;
+    background: transparent;
+    padding: 0;
+  }
+
+  .tabs {
+    display: none;
+  }
+
+  .descriptionCard p:first-of-type {
+    margin-top: 0;
   }
 
   .relatedGrid {
