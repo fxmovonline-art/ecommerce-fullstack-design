@@ -1202,7 +1202,7 @@ textarea {
   .showcase-grid {
     display: grid;
     grid-auto-flow: column;
-    grid-auto-columns: 136px;
+    grid-auto-columns: 152px;
     overflow-x: auto;
     gap: 8px;
     scroll-snap-type: x mandatory;
@@ -1211,27 +1211,40 @@ textarea {
 
   .showcase-grid a,
   .showcase-grid article {
+    display: flex;
+    flex-direction: column;
     border: 1px solid var(--line);
     border-radius: 8px;
-    min-height: 120px;
+    min-height: 138px;
     padding: 10px;
     scroll-snap-align: start;
   }
 
   .showcase-grid h3 {
     font-size: 12px;
-    margin: 0 0 4px;
+    margin: 0;
+    line-height: 1.25;
+    min-height: 30px;
+    max-height: 30px;
+    overflow: hidden;
   }
 
   .showcase-grid p {
+    margin-top: 3px;
     font-size: 10px;
+    line-height: 1.2;
+    min-height: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .mini-thumb {
+    position: static;
+    margin-top: auto;
+    align-self: flex-end;
     width: 42px;
     height: 42px;
-    right: 8px;
-    bottom: 8px;
   }
 
   .content-stack {

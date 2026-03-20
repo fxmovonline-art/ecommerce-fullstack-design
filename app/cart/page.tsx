@@ -101,33 +101,33 @@ export default function CartPage() {
                     Back to shop
                   </Link>
                 </div>
-
-                {savedItems.length > 0 ? (
-                  <section className={styles.savedSection}>
-                    <h2 className={styles.savedTitle}>Saved for later ({savedItems.length})</h2>
-                    <div className={styles.savedGrid}>
-                      {savedItems.map((item) => (
-                        <article key={item.id} className={styles.savedCard}>
-                          <div className={styles.savedImageWrap}>
-                            <Image src={item.image} alt={item.name} width={110} height={110} className={styles.savedImage} />
-                          </div>
-                          <h3>{item.name}</h3>
-                          <p>{money.format(item.price)}</p>
-                          <div className={styles.savedActions}>
-                            <button type="button" className={styles.savedMoveBtn} onClick={() => moveToCart(item.id)}>
-                              Move to cart
-                            </button>
-                            <button type="button" className={styles.savedRemoveBtn} onClick={() => removeSavedItem(item.id)}>
-                              Remove
-                            </button>
-                          </div>
-                        </article>
-                      ))}
-                    </div>
-                  </section>
-                ) : null}
               </>
             )}
+
+            {savedItems.length > 0 ? (
+              <section className={styles.savedSection}>
+                <h2 className={styles.savedTitle}>Saved for later ({savedItems.length})</h2>
+                <div className={styles.savedGrid}>
+                  {savedItems.map((item) => (
+                    <article key={item.id} className={styles.savedCard}>
+                      <div className={styles.savedImageWrap}>
+                        <Image src={item.image} alt={item.name} width={110} height={110} className={styles.savedImage} />
+                      </div>
+                      <h3>{item.name}</h3>
+                      <p>{money.format(item.price)}</p>
+                      <div className={styles.savedActions}>
+                        <button type="button" className={styles.savedMoveBtn} onClick={() => moveToCart(item.id)}>
+                          Move to cart
+                        </button>
+                        <button type="button" className={styles.savedRemoveBtn} onClick={() => removeSavedItem(item.id)}>
+                          Remove
+                        </button>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </section>
+            ) : null}
           </div>
 
           <aside className={`${styles.card} ${styles.summary}`}>
