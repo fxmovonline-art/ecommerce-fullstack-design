@@ -15,6 +15,28 @@ export default async function Home() {
     take: 10,
     orderBy: { createdAt: "desc" },
   });
+
+  const fallbackImageByCategory: Record<string, string> = {
+    electronics: "/images/laptop.png",
+    wearables: "/images/smart watch.png",
+    sneakers: "/images/blenders.png",
+    clothing: "/images/utensils.png",
+    accessories: "/images/headphones.png",
+    home: "/images/homeandoutdoor.jpg",
+  };
+
+  const getRecommendedThumbStyle = (image: string, category: string) => {
+    const categoryKey = category.toLowerCase();
+    const fallbackImage = fallbackImageByCategory[categoryKey] ?? "/images/homeandoutdoor.jpg";
+
+    return {
+      backgroundImage: `url('${image}'), url('${fallbackImage}')`,
+      backgroundPosition: "center, center",
+      backgroundRepeat: "no-repeat, no-repeat",
+      backgroundSize: "cover, cover",
+    };
+  };
+
   const continueShoppingHref =
     recommendedProducts.length > 0
       ? `/product/${recommendedProducts[0].id}`
@@ -76,18 +98,22 @@ export default async function Home() {
       {/* Mobile header */}
       <header className="mobile-header">
         <div className="mobile-header-row">
-          <button className="mobile-menu-btn" aria-label="Menu">
+          <Link href="/shop" className="mobile-menu-btn" aria-label="Open categories">
             <span className="mobile-menu-icon" />
-          </button>
+          </Link>
           <span className="brand-mark">
             <span className="brand-icon">B</span>
             <span className="brand-text">Brand</span>
           </span>
           <div className="mobile-header-icons">
             <CartNavLink variant="mobile" />
-            <button aria-label="User" className="mobile-header-btn">
+            <Link
+              href={currentUser ? continueShoppingHref : "/login"}
+              aria-label="Account"
+              className="mobile-header-btn"
+            >
               <span className="mobile-user-icon" />
-            </button>
+            </Link>
           </div>
         </div>
         <div className="mobile-search-row">
@@ -95,9 +121,9 @@ export default async function Home() {
         </div>
         <nav className="mobile-category-tabs">
           <Link href="/shop" className="active">All category</Link>
-          <Link href="/shop">Gadgets</Link>
-          <Link href="/shop">Clothes</Link>
-          <Link href="/shop">Accessories</Link>
+          <Link href="/shop?category=electronics">Gadgets</Link>
+          <Link href="/shop?category=clothing">Clothes</Link>
+          <Link href="/shop?category=accessories">Accessories</Link>
         </nav>
       </header>
 
@@ -273,7 +299,7 @@ export default async function Home() {
               <Link href={`/product/${product.id}`}>
                 <div
                   className="thumb"
-                  style={{ backgroundImage: `url('${product.image}')` }}
+                  style={getRecommendedThumbStyle(product.image, product.category)}
                 />
                 <h3>${product.price.toFixed(2)}</h3>
                 <p>{product.name}</p>
@@ -377,10 +403,10 @@ export default async function Home() {
           <span className="mobile-footer-icon cart" />
           <span>Cart</span>
         </Link>
-        <button className="mobile-footer-btn">
+        <Link href={currentUser ? continueShoppingHref : "/login"} className="mobile-footer-btn">
           <span className="mobile-footer-icon user" />
           <span>Account</span>
-        </button>
+        </Link>
       </footer>
     </main>
   );
